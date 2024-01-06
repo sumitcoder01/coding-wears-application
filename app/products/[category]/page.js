@@ -24,6 +24,7 @@ export default function Products({ params }) {
                 <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">{category}</h3>
                 <h2 className="text-gray-900 title-font text-lg font-medium">Black hooddie-{index}</h2>
                 <p className="mt-1">₹499.00</p>
+                <span className='text-gray-500 text-xs tracking-widest title-font mb-1'>S, M, L, XL, XXL</span>
               </div>
               </Link>
             </div>

@@ -32,6 +32,7 @@ export default function Shop() {
                     Black hoodie-{index}
                   </h2>
                   <p className="mt-1">₹499.00</p>
+                  <span className='text-gray-500 text-xs tracking-widest title-font mb-1'>S, M, L, XL, XXL</span>
                 </div>
                 </Link>
               </div>

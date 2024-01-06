@@ -1,8 +1,8 @@
 import Image from 'next/image';
-
+import CheckPinCode from '@/app/components/CheckPinCode';
 export default function Product({ params }) {
   return (
-    <section className="text-gray-600 body-font overflow-hidden">
+    <div className="text-gray-600 body-font">
       <div className="container px-5 py-20 mx-auto">
         <div className="lg:w-4/5 mx-auto flex flex-wrap">
           <div className="lg:w-1/2 w-full l:h-auto h-64 object-top rounded">
@@ -134,10 +134,11 @@ export default function Product({ params }) {
                 </svg>
               </button>
             </div>
+              <CheckPinCode/>
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 }
 
