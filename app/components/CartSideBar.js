@@ -5,65 +5,17 @@ import { IoClose } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-
+import { useDispatch, useSelector } from "react-redux";
+import {
+  removeFromCart,
+  clearCart,
+  incrementByOne,
+  decrementByOne,
+} from "../redux/cartSlice";
 export default function CartSideBar() {
+  const cart = useSelector((data) => data.cartData.cart);
+  const dispatch = useDispatch();
   const [cartVisible, setCartVisible] = useState(false);
-  const [cart, setCart] = useState([{
-    id: 1000,
-    name: "black Hoodie(XL,XX)",
-    price: 345,
-    quantity: 10,
-  },
-  {
-    id: 1001,
-    name: "black Hoodie(XL,XX)",
-    price: 345,
-    quantity: 10,
-  },
-  {
-    id: 1002,
-    name: "black Hoodie(XL,XX)",
-    price: 345,
-    quantity: 10,
-  },
-
-  {
-    id: 1003,
-    name: "black Hoodie(XL,XX)",
-    price: 345,
-    quantity: 10,
-  },
-  {
-    id: 1004,
-    name: "black Hoodie(XL,XX)",
-    price: 345,
-    quantity: 10,
-  },
-  {
-    id: 1005,
-    name: "black Hoodie(XL,XX)",
-    price: 345,
-    quantity: 10,
-  },
-  {
-    id: 1006,
-    name: "black Hoodie(XL,XX)",
-    price: 345,
-    quantity: 10,
-  },
-  {
-    id: 1007,
-    name: "black Hoodie(XL,XX)",
-    price: 345,
-    quantity: 10,
-  },
-  {
-    id: 1008,
-    name: "black Hoodie(XL,XX)",
-    price: 345,
-    quantity: 10,
-  },
-  ]);
   useEffect(() => {
     if (cart.length !== 0) {
       setCartVisible(true);
@@ -71,17 +23,10 @@ export default function CartSideBar() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleOnMinus = (index) => { };
-  const handleOnPlus = (index) => { };
-
-  const removeFromCart = (id) => { };
-
   const calculateTotal = () => {
     return cart.reduce((total, item) => total + item.price * item.quantity, 0);
   };
-  const clearCart = () => {
-    setCart([]);
-  };
+
   return (
     <>
       <span className="inline-flex items-center py-1 px-3  hover:bg-gray-200 rounded  text-xl md:text-2xl mt-4 md:mt-0">
@@ -112,7 +57,7 @@ export default function CartSideBar() {
                     </p>
                     <button
                       className="text-md text-red-500 ml-auto"
-                      onClick={() => removeFromCart(item.id)}
+                      onClick={() => dispatch(removeFromCart(item.id))}
                     >
                       <MdDelete />
                     </button>
@@ -121,17 +66,17 @@ export default function CartSideBar() {
 
                   <div className="flex items-center">
                     <button
-                      className="text-sm text-gray-500 mr-2"
-                      onClick={() => handleOnMinus(index)}
+                      className="text-md mr-2"
+                      onClick={() => dispatch(decrementByOne(index))}
                     >
-                      <FaCircleMinus />
+                      <FaCircleMinus className='text-pink-500' />
                     </button>
-                    <span className="text-sm">{item.quantity}</span>
+                    <span className="text-md">{item.quantity}</span>
                     <button
-                      className="text-sm text-gray-500 ml-2"
-                      onClick={() => handleOnPlus(index)}
+                      className="text-md ml-2"
+                      onClick={() => dispatch(incrementByOne(index))}
                     >
-                      <FaCirclePlus />
+                      <FaCirclePlus className='text-pink-500' />
                     </button>
                   </div>
                 </div>
@@ -151,7 +96,7 @@ export default function CartSideBar() {
                 </Link>
                 <button
                   className="mt-4 bg-pink-500 text-white py-2 px-4 rounded hover:bg-pink-600"
-                  onClick={clearCart}
+                  onClick={() => dispatch(clearCart())}
                 >
                   clear cart
                 </button>

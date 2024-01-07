@@ -1,8 +1,9 @@
-"use client"
+"use client";
 import Link from 'next/link';
 import { useState } from 'react';
-
+import { useSelector } from "react-redux";
 export default function Checkout() {
+  const cart = useSelector((data) => data.cartData.cart);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -13,62 +14,7 @@ export default function Checkout() {
     state: '',
     pincode: '',
   });
-  const [cart, setCart] = useState([{
-    id: 1000,
-    name: "black Hoodie(XL,XX)",
-    price: 345,
-    quantity: 10,
-  },
-  {
-    id: 1001,
-    name: "black Hoodie(XL,XX)",
-    price: 345,
-    quantity: 10,
-  },
-  {
-    id: 1002,
-    name: "black Hoodie(XL,XX)",
-    price: 345,
-    quantity: 10,
-  },
-
-  {
-    id: 1003,
-    name: "black Hoodie(XL,XX)",
-    price: 345,
-    quantity: 10,
-  },
-  {
-    id: 1004,
-    name: "black Hoodie(XL,XX)",
-    price: 345,
-    quantity: 10,
-  },
-  {
-    id: 1005,
-    name: "black Hoodie(XL,XX)",
-    price: 345,
-    quantity: 10,
-  },
-  {
-    id: 1006,
-    name: "black Hoodie(XL,XX)",
-    price: 345,
-    quantity: 10,
-  },
-  {
-    id: 1007,
-    name: "black Hoodie(XL,XX)",
-    price: 345,
-    quantity: 10,
-  },
-  {
-    id: 1008,
-    name: "black Hoodie(XL,XX)",
-    price: 345,
-    quantity: 10,
-  },
-  ]);
+ 
   const calculateTotal = () => {
     return cart.reduce((total, item) => total + item.price * item.quantity, 0);
   };
