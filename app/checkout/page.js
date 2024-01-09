@@ -26,7 +26,6 @@ export default function Checkout() {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
 
     console.log(formData);
   };
@@ -155,7 +154,7 @@ export default function Checkout() {
               {cart.map((item, index) => (
                 <div key={item.id} className="mb-4 flex justify-between items-center">
                   <p className="text-gray-700 mb-1">
-                    {index + 1}. {item.name}
+                  {`${index + 1}. ${item.name},${item.color}/${item.size}`}
                   </p>
                   <p className="font-medium mb-1">{item.quantity} items</p>
                   <p className="font-medium mb-1">₹{item.price.toFixed(2)}</p>

@@ -12,12 +12,12 @@ export const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    addToCard: (state, action) => {
+    addToCart: (state, action) => {
       let found = false;
       let myCart = state.cart;
       let item = action.payload;
       for (let index = 0; index < myCart.length; index++) {
-        if (myCart[index].id === item.id) {
+        if (myCart[index].slug === item.slug && myCart[index].color === item.color && myCart[index].size === item.size) {
           myCart[index].quantity += item.quantity;
           found = true;
           break;
@@ -29,9 +29,14 @@ export const cartSlice = createSlice({
       state.cart = myCart;
       localStorage.setItem("cart", JSON.stringify(myCart));
     },
+    buyNow: (state, action) => {
+      let myCart = [{ ...action.payload }];
+      state.cart = myCart;
+      localStorage.setItem("cart", JSON.stringify(myCart));
+    },
     removeFromCart: (state, action) => {
       let myCart = state.cart;
-      myCart = myCart.filter((item) => item.id !== action.payload);
+      myCart.splice(action.payload, 1);
       state.cart = myCart;
       localStorage.setItem("cart", JSON.stringify(myCart));
     },
@@ -58,11 +63,12 @@ export const cartSlice = createSlice({
 });
 
 export const {
-  addToCard,
+  addToCart,
   removeFromCart,
   clearCart,
   incrementByOne,
   decrementByOne,
+  buyNow,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

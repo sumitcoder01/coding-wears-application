@@ -53,11 +53,11 @@ export default function CartSideBar() {
                 <div key={item.id} className="mb-4">
                   <div className="flex justify-between">
                     <p className="text-gray-700 mb-1">
-                      {index + 1}. {item.name}
+                      {`${index + 1}. ${item.name},${item.color}/${item.size}`}
                     </p>
                     <button
                       className="text-md text-red-500 ml-auto"
-                      onClick={() => dispatch(removeFromCart(item.id))}
+                      onClick={() => dispatch(removeFromCart(index))}
                     >
                       <MdDelete />
                     </button>

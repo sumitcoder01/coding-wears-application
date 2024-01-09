@@ -3,43 +3,74 @@ import Image from 'next/image';
 import CheckPinCode from '@/app/components/CheckPinCode';
 import { useEffect, useState } from 'react';
 import { BASE_URL } from '@/confiq/apiurl';
-import { useRouter } from 'next/navigation'
- 
+import { useRouter } from 'next/navigation';
+import { useDispatch } from 'react-redux';
+import { addToCart, buyNow } from '@/app/redux/cartSlice';
+
 export default function Product({ params }) {
-  const slug = params.item;
-  const router = useRouter()
+  const dispatch = useDispatch();
+  const router = useRouter();
   const [product, setProduct] = useState({});
-  const [sizeVarient, setSizeVarient] = useState({});
-  const [colorVarient, setColorVarient] = useState({});
+  const [sizeColorVarient, setSizeColorVarient] = useState({});
+
   const geData = async () => {
     try {
-      const res = await fetch(`${BASE_URL}/products//getproduct/${slug}`, {
+      const res = await fetch(`${BASE_URL}/products/getproduct/${params.item}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
-      })
+      });
+
       const response = await res.json();
       if (response.success) {
         setProduct(response.varient);
-        setSizeVarient(response.sizeVarient);
-        setColorVarient(response.colorVarient);
+        setSizeColorVarient(response.sizeColorVarient);
       }
     } catch (error) {
-      console.log("Server Error!");
+      console.error("Server Error!", error);
     }
-  }
-  const handleOnClick =(color)=>{
-    setProduct({ ...product, color: color });
-      router.push(`/products/product/${colorVarient[color][product.size] && slug}`);
-  }
-  const handleOnChange = (size)=>{
-    setProduct({ ...product, size: size });
-      router.push(`/products/product/${sizeVarient[size][product.color] && slug}`);
-  }
+  };
+
+  const handleOnClick = (color) => {
+    setProduct({ ...product, color });
+  };
+
+  const handleOnChange = (size) => {
+    setProduct({ ...product, size });
+    const newColor = Object.keys(sizeColorVarient[size])[0];
+    router.push(`/products/product/${sizeColorVarient[size][newColor]}`);
+  };
+
+  const handleOnAddToCart = () => {
+    dispatch(addToCart({
+      id: product._id,
+      slug: product.slug,
+      name: product.title,
+      price: product.price,
+      quantity: 1,
+      color: product.color,
+      size: product.size,
+    }));
+  };
+
+  const handleOnCheckOut = () => {
+    dispatch(buyNow({
+      id: product._id,
+      slug: product.slug,
+      name: product.title,
+      price: product.price,
+      quantity: 1,
+      color: product.color,
+      size: product.size,
+    }));
+    router.push('/checkout');
+  };
+
   useEffect(() => {
     geData();
-  })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <div className="text-gray-600 body-font">
       <div className="container px-5 py-20 mx-auto">
@@ -48,17 +79,17 @@ export default function Product({ params }) {
             <Image
               alt={params.item}
               className="lg:w-1/2 w-full lg:h-auto h-auto object-top rounded"
-              src={product.img}
+              src={product.img || ""}
               width={400}
               height={400}
             />
           </div>
           <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
             <h2 className="text-sm title-font text-gray-500 tracking-widest">{product.category}</h2>
-            <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">{product.title}</h1>
+            <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">{`${product.title},${product.color}/${product.size}`}</h1>
             <div className="flex mb-4">
               <span className="flex items-center">
-                {Array(product.review).map((_star, index) => (
+                {[...Array(product.review)].map((_, index) => (
                   <svg
                     key={index}
                     fill="currentColor"
@@ -121,15 +152,20 @@ export default function Product({ params }) {
             <div className="flex mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5">
               <div className="flex">
                 <span className="mr-3">Color</span>
-                {Object.keys(colorVarient).map(color =>
-                  <button onClick={() => handleOnClick(color)} key={color} className={`border-2 ${product.color === color ? "border-gray-600" : "border-gray-300"} mr-1 ${color !== "black" ? `bg-${color}-600` : "bg-black"} rounded-full w-6 h-6 focus:outline-none`}></button>
+                {sizeColorVarient[product.size] && Object.keys(sizeColorVarient[product.size]).map(color =>
+                  <button
+                    onClick={() => handleOnClick(color)}
+                    key={color}
+                    className={`border-2 ${product.color === color ? "border-gray-600" : "border-gray-300"} mr-1 ${color !== "black" ? `bg-${color}-600` : "bg-black"
+                      } rounded-full w-6 h-6 focus:outline-none`}
+                  ></button>
                 )}
               </div>
               <div className="flex ml-6 items-center">
                 <span className="mr-3">Size</span>
                 <div className="relative">
                   <select value={product.size} onChange={(e) => handleOnChange(e.target.value)} className="rounded border appearance-none border-gray-300 py-2 focus:outline-none focus:ring-2 focus:ring-pink-200 focus:border-pink-500 text-base pl-3 pr-10">
-                    {Object.keys(sizeVarient).map(size =>
+                    {Object.keys(sizeColorVarient).map(size =>
                       <option key={size}>{size}</option>
                     )}
                   </select>
@@ -151,10 +187,10 @@ export default function Product({ params }) {
             </div>
             <div className="flex">
               <span className="title-font font-medium text-2xl text-gray-900">₹{product.price}</span>
-              <button className="flex ml-auto text-white bg-pink-500 border-0 py-2 px-6 focus:outline-none hover:bg-pink-600 rounded">
+              <button onClick={handleOnAddToCart} className="flex ml-auto text-white bg-pink-500 border-0 py-2 px-6 focus:outline-none hover:bg-pink-600 rounded">
                 Add to Cart
               </button>
-              <button className="flex ml-auto text-white bg-pink-500 border-0 py-2 px-6 focus:outline-none hover:bg-pink-600 rounded">
+              <button onClick={handleOnCheckOut} className="flex ml-auto text-white bg-pink-500 border-0 py-2 px-6 focus:outline-none hover:bg-pink-600 rounded">
                 Order Now
               </button>
               <button className="rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4">
