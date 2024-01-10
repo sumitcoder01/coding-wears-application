@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-
+import { toast } from "react-toastify";
 export default function CheckPinCode() {
     const [isServiceable, setIsServiceable] = useState(null);
     const [pincode, setPincode] = useState('');
@@ -10,8 +10,10 @@ export default function CheckPinCode() {
         const parsedPincode = parseInt(pincode);
         if (pincodes.includes(parsedPincode)) {
             setIsServiceable(true);
+            toast.success('Congratulations! Your pin code is serviceable');
         } else {
             setIsServiceable(false);
+            toast.error('Sorry! Your pin code is not serviceable');
         }
     }
 

@@ -1,8 +1,43 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
 import Logo from "../../public/image/coding-wears-logo.png";
 import { FaUserLock } from "react-icons/fa";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { BASE_URL } from "@/confiq/apiurl";
+import { toast } from "react-toastify";
 export default function Forgot() {
+  const router = useRouter();
+  const [email, setEmail] = useState('');
+  useEffect(() => {
+    if (localStorage.getItem('auth-token')) {
+      router.push("/");
+    }
+  }, [router])
+  const handleOnSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch(`${BASE_URL}/users/forgot`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email })
+      });
+      const response = await res.json();
+      if (response.success) {
+        toast.success(response.message);
+        router.push('/login');
+      }
+      else {
+        toast.error(response.error);
+      }
+    } catch (error) {
+      toast.error("Server Error!");
+    }
+    setEmail('')
+  }
   return (
     <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -13,7 +48,7 @@ export default function Forgot() {
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form className="space-y-6">
+        <form className="space-y-6" onSubmit={handleOnSubmit}>
           <div>
             <label
               htmlFor="email"
@@ -27,7 +62,9 @@ export default function Forgot() {
                 name="email"
                 type="email"
                 autoComplete="email"
-                required
+                minLength={5}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 px-2 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm sm:leading-6"
               />
             </div>
@@ -37,7 +74,7 @@ export default function Forgot() {
               type="submit"
               className="flex  items-center w-full justify-center rounded-md bg-pink-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-pink-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-600"
             >
-              <FaUserLock className='mr-2'/> forgot passowrd
+              <FaUserLock className='mr-2' /> forgot passowrd
             </button>
           </div>
         </form>

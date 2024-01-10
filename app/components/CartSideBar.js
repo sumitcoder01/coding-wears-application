@@ -6,6 +6,7 @@ import { MdDelete } from "react-icons/md";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 import {
   removeFromCart,
   clearCart,
@@ -53,16 +54,19 @@ export default function CartSideBar() {
                 <div key={item.id} className="mb-4">
                   <div className="flex justify-between">
                     <p className="text-gray-700 mb-1">
-                      {`${index + 1}. ${item.name},${item.color}/${item.size}`}
+                      {`${index + 1}. ${item.name} (${item.size}/${item.color})`}
                     </p>
                     <button
                       className="text-md text-red-500 ml-auto"
-                      onClick={() => dispatch(removeFromCart(index))}
+                      onClick={() => {
+                        dispatch(removeFromCart(index))
+                        toast.success('Item removed from Cart');
+                      }}
                     >
                       <MdDelete />
                     </button>
                   </div>
-                  <p className="font-medium mb-1">₹{item.price.toFixed(2)}</p>
+                  <p className="font-medium mb-1">₹{item.price && item.price.toFixed(2)}</p>
 
                   <div className="flex items-center">
                     <button
@@ -96,7 +100,10 @@ export default function CartSideBar() {
                 </Link>
                 <button
                   className="mt-4 bg-pink-500 text-white py-2 px-4 rounded hover:bg-pink-600"
-                  onClick={() => dispatch(clearCart())}
+                  onClick={() => {
+                    dispatch(clearCart())
+                    toast.success('Cleared Cart Items');
+                  }}
                 >
                   clear cart
                 </button>

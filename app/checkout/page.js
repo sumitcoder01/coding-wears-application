@@ -1,5 +1,6 @@
 "use client";
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useSelector } from "react-redux";
 export default function Checkout() {
@@ -15,6 +16,7 @@ export default function Checkout() {
     pincode: '',
   });
  
+  const router = useRouter();
   const calculateTotal = () => {
     return cart.reduce((total, item) => total + item.price * item.quantity, 0);
   };
@@ -25,9 +27,9 @@ export default function Checkout() {
     });
   };
 
-  const handleSubmit = (e) => {
-
+  const handleSubmit = () => {
     console.log(formData);
+    router.push('/order/8977');
   };
 
   return (
@@ -151,13 +153,13 @@ export default function Checkout() {
             <p className="text-gray-500">Your cart is empty.</p>
           ) : (
             <div>
-              {cart.map((item, index) => (
-                <div key={item.id} className="mb-4 flex justify-between items-center">
-                  <p className="text-gray-700 mb-1">
-                  {`${index + 1}. ${item.name},${item.color}/${item.size}`}
+              {cart && cart.map((item, index) => (
+                <div key={item.id} className="mb-4 flex justify-between flex-wrap items-center">
+                  <p className="text-gray-700 mb-1 mr-1">
+                  {`${index + 1}. ${item.name} (${item.size}/${item.color})`}
                   </p>
-                  <p className="font-medium mb-1">{item.quantity} items</p>
-                  <p className="font-medium mb-1">₹{item.price.toFixed(2)}</p>
+                  <p className="font-medium mb-1 mr-1">{item.quantity} items</p>
+                  <p className="font-medium mb-1 mr-1">₹{item.price && item.price.toFixed(2)}</p>
                 </div>
               ))}
               <hr className="my-4 border-gray-200" />
@@ -166,11 +168,11 @@ export default function Checkout() {
                 <p className="text-lg font-semibold">₹{calculateTotal().toFixed(2)}</p>
               </div>
               <div className="flex justify-start mt-4">
-                <Link href="/orders">
-                  <button className="bg-pink-500 text-white py-2 px-4 rounded hover:bg-pink-600 transition duration-300 ease-in-out">
+                <span>
+                  <button onClick={handleSubmit} className="bg-pink-500 text-white py-2 px-4 rounded hover:bg-pink-600 transition duration-300 ease-in-out">
                     Order Now
                   </button>
-                </Link>
+                </span>
               </div>
             </div>
           )}

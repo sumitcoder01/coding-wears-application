@@ -1,12 +1,12 @@
-"use client"
-import Image from 'next/image';
-import CheckPinCode from '@/app/components/CheckPinCode';
-import { useEffect, useState } from 'react';
-import { BASE_URL } from '@/confiq/apiurl';
-import { useRouter } from 'next/navigation';
-import { useDispatch } from 'react-redux';
-import { addToCart, buyNow } from '@/app/redux/cartSlice';
-
+"use client";
+import Image from "next/image";
+import CheckPinCode from "@/app/components/CheckPinCode";
+import { useEffect, useState } from "react";
+import { BASE_URL } from "@/confiq/apiurl";
+import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { addToCart, buyNow } from "@/app/redux/cartSlice";
+import { toast } from "react-toastify";
 export default function Product({ params }) {
   const dispatch = useDispatch();
   const router = useRouter();
@@ -15,12 +15,15 @@ export default function Product({ params }) {
 
   const geData = async () => {
     try {
-      const res = await fetch(`${BASE_URL}/products/getproduct/${params.item}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const res = await fetch(
+        `${BASE_URL}/products/getproduct/${params.item}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       const response = await res.json();
       if (response.success) {
@@ -43,28 +46,33 @@ export default function Product({ params }) {
   };
 
   const handleOnAddToCart = () => {
-    dispatch(addToCart({
-      id: product._id,
-      slug: product.slug,
-      name: product.title,
-      price: product.price,
-      quantity: 1,
-      color: product.color,
-      size: product.size,
-    }));
+    toast.success('item added to cart');
+    dispatch(
+      addToCart({
+        id: product._id,
+        slug: product.slug,
+        name: product.title,
+        price: product.price,
+        quantity: 1,
+        color: product.color,
+        size: product.size,
+      })
+    );
   };
 
   const handleOnCheckOut = () => {
-    dispatch(buyNow({
-      id: product._id,
-      slug: product.slug,
-      name: product.title,
-      price: product.price,
-      quantity: 1,
-      color: product.color,
-      size: product.size,
-    }));
-    router.push('/checkout');
+    dispatch(
+      buyNow({
+        id: product._id,
+        slug: product.slug,
+        name: product.title,
+        price: product.price,
+        quantity: 1,
+        color: product.color,
+        size: product.size,
+      })
+    );
+    router.push("/checkout");
   };
 
   useEffect(() => {
@@ -85,8 +93,10 @@ export default function Product({ params }) {
             />
           </div>
           <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
-            <h2 className="text-sm title-font text-gray-500 tracking-widest">{product.category}</h2>
-            <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">{`${product.title},${product.color}/${product.size}`}</h1>
+            <h2 className="text-sm title-font text-gray-500 tracking-widest">
+              {product.category}
+            </h2>
+            <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">{`${product.title} (${product.size}/${product.color})`}</h1>
             <div className="flex mb-4">
               <span className="flex items-center">
                 {[...Array(product.review)].map((_, index) => (
@@ -100,12 +110,12 @@ export default function Product({ params }) {
                     className="w-4 h-4 text-pink-500"
                     viewBox="0 0 24 24"
                   >
-                    <path
-                      d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
-                    ></path>
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
                   </svg>
                 ))}
-                <span className="text-gray-600 ml-3">{product.review} Reviews</span>
+                <span className="text-gray-600 ml-3">
+                  {product.review} Reviews
+                </span>
               </span>
               <span className="flex ml-3 pl-3 py-2 border-l-2 border-gray-200 space-x-2s">
                 <a className="text-gray-500">
@@ -146,28 +156,34 @@ export default function Product({ params }) {
                 </a>
               </span>
             </div>
-            <p className="leading-relaxed">
-              {product.description}
-            </p>
+            <p className="leading-relaxed">{product.description}</p>
             <div className="flex mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5">
               <div className="flex">
                 <span className="mr-3">Color</span>
-                {sizeColorVarient[product.size] && Object.keys(sizeColorVarient[product.size]).map(color =>
-                  <button
-                    onClick={() => handleOnClick(color)}
-                    key={color}
-                    className={`border-2 ${product.color === color ? "border-gray-600" : "border-gray-300"} mr-1 ${color !== "black" ? `bg-${color}-600` : "bg-black"
-                      } rounded-full w-6 h-6 focus:outline-none`}
-                  ></button>
-                )}
+                {sizeColorVarient[product.size] &&
+                  Object.keys(sizeColorVarient[product.size]).sort().map((color) => (
+                    <button
+                      onClick={() => handleOnClick(color)}
+                      key={color}
+                      className={`border-2 ${product.color === color
+                          ? "border-gray-600"
+                          : "border-gray-300"
+                        } mr-1 ${color !== "black" ? `bg-${color}-600` : "bg-black"
+                        } rounded-full w-6 h-6 focus:outline-none`}
+                    ></button>
+                  ))}
               </div>
               <div className="flex ml-6 items-center">
                 <span className="mr-3">Size</span>
                 <div className="relative">
-                  <select value={product.size} onChange={(e) => handleOnChange(e.target.value)} className="rounded border appearance-none border-gray-300 py-2 focus:outline-none focus:ring-2 focus:ring-pink-200 focus:border-pink-500 text-base pl-3 pr-10">
-                    {Object.keys(sizeColorVarient).map(size =>
+                  <select
+                    value={product.size}
+                    onChange={(e) => handleOnChange(e.target.value)}
+                    className="rounded border appearance-none border-gray-300 py-2 focus:outline-none focus:ring-2 focus:ring-pink-200 focus:border-pink-500 text-base pl-3 pr-10"
+                  >
+                    {Object.keys(sizeColorVarient).sort().map((size) => (
                       <option key={size}>{size}</option>
-                    )}
+                    ))}
                   </select>
                   <span className="absolute right-0 top-0 h-full w-10 text-center text-gray-600 pointer-events-none flex items-center justify-center">
                     <svg
@@ -186,11 +202,19 @@ export default function Product({ params }) {
               </div>
             </div>
             <div className="flex">
-              <span className="title-font font-medium text-2xl text-gray-900">₹{product.price}</span>
-              <button onClick={handleOnAddToCart} className="flex ml-auto text-white bg-pink-500 border-0 py-2 px-6 focus:outline-none hover:bg-pink-600 rounded">
+              <span className="title-font font-medium text-2xl text-gray-900">
+                ₹{product.price}
+              </span>
+              <button
+                onClick={handleOnAddToCart}
+                className="flex ml-auto text-white bg-pink-500 border-0 py-2 px-6 focus:outline-none hover:bg-pink-600 rounded"
+              >
                 Add to Cart
               </button>
-              <button onClick={handleOnCheckOut} className="flex ml-auto text-white bg-pink-500 border-0 py-2 px-6 focus:outline-none hover:bg-pink-600 rounded">
+              <button
+                onClick={handleOnCheckOut}
+                className="flex ml-auto text-white bg-pink-500 border-0 py-2 px-6 focus:outline-none hover:bg-pink-600 rounded"
+              >
                 Order Now
               </button>
               <button className="rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4">

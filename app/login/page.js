@@ -1,8 +1,54 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
 import Logo from "../../public/image/coding-wears-logo.png";
 import { FaUserLock } from "react-icons/fa";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { BASE_URL } from "@/confiq/apiurl";
+import { toast } from "react-toastify";
 export default function Login() {
+  const router = useRouter();
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  });
+  useEffect(() => {
+    if (localStorage.getItem('auth-token')) {
+      router.push("/");
+    }
+  }, [router])
+  const handleOnSubmit = async (e) => {
+    e.preventDefault();
+    const { email, password } = formData;
+    try {
+      const res = await fetch(`${BASE_URL}/users/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password })
+      });
+      const response = await res.json();
+      if (response.success) {
+        localStorage.setItem('auth-token', response.authToken);
+        toast.success(response.message);
+        router.push('/');
+      }
+      else {
+        toast.error(response.error);
+      }
+    } catch (error) {
+      toast.error("Server Error!");
+    }
+    setFormData({
+      email: '',
+      password: '',
+    })
+  }
+  const handleOnChange =(e)=>{
+    setFormData({...formData,[e.target.name]:e.target.value});
+  }
   return (
     <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -13,7 +59,7 @@ export default function Login() {
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form className="space-y-6">
+        <form className="space-y-6" onSubmit={handleOnSubmit}>
           <div>
             <label
               htmlFor="email"
@@ -27,7 +73,9 @@ export default function Login() {
                 name="email"
                 type="email"
                 placeholder="enter your email"
-                required
+                minLength={5}
+                value={formData.email}
+                onChange={handleOnChange}
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 px-2 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm sm:leading-6"
               />
             </div>
@@ -55,7 +103,9 @@ export default function Login() {
                 name="password"
                 type="password"
                 placeholder="enter your password"
-                required
+                minLength={8}
+                value={formData.password}
+                onChange={handleOnChange}
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 px-2 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm sm:leading-6"
               />
             </div>

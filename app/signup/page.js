@@ -1,8 +1,62 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
 import Logo from "../../public/image/coding-wears-logo.png";
 import { FaUserLock } from "react-icons/fa";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { BASE_URL } from "@/confiq/apiurl";
+import { toast } from "react-toastify";
 export default function Signup() {
+  const router = useRouter();
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassoword: ''
+  });
+  useEffect(() => {
+    if (localStorage.getItem('auth-token')) {
+      router.push("/");
+    }
+  }, [router])
+  const handleOnSubmit = async (e) => {
+    e.preventDefault();
+    const { name, email, password, confirmPassoword } = formData;
+    if (confirmPassoword !== password) {
+      toast.error("Incorrect confirm passoword");
+    }
+    else {
+      try {
+        const res = await fetch(`${BASE_URL}/users/signup`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ name, email, password })
+        });
+        const response = await res.json();
+        if (response.success) {
+          toast.success(response.message);
+          router.push('/login');
+        }
+        else {
+          toast.error(response.error);
+        }
+      } catch (error) {
+        toast.error("Server Error!");
+      }
+    }
+    setFormData({
+      name: '',
+      email: '',
+      password: '',
+      confirmPassoword: ''
+    })
+  }
+  const handleOnChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  }
   return (
     <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -13,7 +67,7 @@ export default function Signup() {
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form className="space-y-6">
+        <form className="space-y-6" onSubmit={handleOnSubmit}>
           <div>
             <label
               htmlFor="email"
@@ -23,11 +77,14 @@ export default function Signup() {
             </label>
             <div className="mt-2">
               <input
-                id="naqme"
+                id="name"
                 name="name"
                 type="name"
                 placeholder="enter your name"
                 required
+                minLength={5}
+                value={formData.name}
+                onChange={handleOnChange}
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 px-2  focus:outline-none focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm sm:leading-6"
               />
             </div>
@@ -46,6 +103,9 @@ export default function Signup() {
                 type="email"
                 placeholder="enter your email"
                 required
+                minLength={5}
+                value={formData.email}
+                onChange={handleOnChange}
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 px-2 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm sm:leading-6"
               />
             </div>
@@ -64,6 +124,9 @@ export default function Signup() {
                 type="password"
                 placeholder="enter your password"
                 required
+                minLength={8}
+                value={formData.password}
+                onChange={handleOnChange}
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 px-2 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm sm:leading-6"
               />
             </div>
@@ -78,10 +141,13 @@ export default function Signup() {
             <div className="mt-2">
               <input
                 id="confirmPassword"
-                name="confirmPassword"
+                name="confirmPassoword"
                 type="password"
                 placeholder="confirm your password"
                 required
+                minLength={8}
+                value={formData.confirmPassoword}
+                onChange={handleOnChange}
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 px-2 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm sm:leading-6"
               />
             </div>
