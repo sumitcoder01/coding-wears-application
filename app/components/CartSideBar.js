@@ -51,7 +51,7 @@ export default function CartSideBar() {
           ) : (
             <div>
               {cart.map((item, index) => (
-                <div key={item.id} className="mb-4">
+                <div key={index} className="mb-4">
                   <div className="flex justify-between">
                     <p className="text-gray-700 mb-1">
                       {`${index + 1}. ${item.name} (${item.size}/${item.color})`}

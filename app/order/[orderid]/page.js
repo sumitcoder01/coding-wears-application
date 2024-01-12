@@ -1,15 +1,50 @@
+"use client";
 import Image from "next/image";
 import Hero from "../../../public/image/hero.jpg";
+import { toast } from "react-toastify";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+
 export default function Order({ params }) {
+  const [order, setOrder] = useState(null);
+  const router = useRouter();
+  const getOrder = async (orderId) => {
+    try {
+      const res = await fetch(`${BASE_URL}/orders/getorders/${orderId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "auth-token": localStorage.getItem('auth-token'),
+        },
+      });
+      const response = await res.json();
+      if (response.success) {
+        toast.success(response.message);
+        setOrder(response.order);
+      }
+      else {
+        toast.error(response.error);
+      }
+    } catch (error) {
+      toast.error("Server Error!");
+
+    }
+  };
+  useEffect(() => {
+    if (!localStorage.getItem('auth-token')) {
+      router.push('/');
+    }
+    getOrder(params.orderid);
+  }, [router, params.orderid])
   return (
     <div className="text-gray-600">
       <div className="container px-5 py-24 mx-auto">
-        <div className="lg:w-4/5 mx-auto flex flex-wrap">
+        {order ? <div className="lg:w-4/5 mx-auto flex flex-wrap">
           <div className="lg:w-1/2 w-full lg:pr-10 lg:py-6 mb-6 lg:mb-0">
             <h2 className="text-sm title-font text-gray-500 tracking-widest">
               CODINGWEAR.COM
             </h2>
-            <h1 className="text-gray-900 text-3xl title-font font-medium mb-4">
+            <h1 className="text-gray-900 text-xl title-font font-medium mb-4">
               Order Id: #{params.orderid}
             </h1>
             <h4 className="text-sm mb-4 text-gray-500">
@@ -26,30 +61,15 @@ export default function Order({ params }) {
                 Item Total
               </span>
             </div>
-            <div className="flex border-t border-gray-200 py-2">
-              <span className="text-gray-500">Wear the code</span>
-              <span className="ml-auto text-gray-900">3</span>
-              <span className="ml-auto text-gray-900">₹1000.00</span>
-            </div>
-            <div className="flex border-t border-gray-200 py-2">
-              <span className="text-gray-500">Wear the code</span>
-              <span className="ml-auto text-gray-900">3</span>
-              <span className="ml-auto text-gray-900">₹1000.00</span>
-            </div>
-            <div className="flex border-t border-gray-200 py-2">
-              <span className="text-gray-500">Wear the code</span>
-              <span className="ml-auto text-gray-900">3</span>
-              <span className="ml-auto text-gray-900">₹1000.00</span>
-            </div>
-            <div className="flex border-t border-gray-200 py-2">
-              <span className="text-gray-500">Wear the code</span>
-              <span className="ml-auto text-gray-900">3</span>
-              <span className="ml-auto text-gray-900">₹1000.00</span>
-            </div>
-
+            {order.prdoucts && order.products.map(item =>
+              <div key={item.productId} className="flex border-t border-gray-200 py-2">
+                <span className="text-gray-500">{item.name}</span>
+                <span className="ml-auto text-gray-900">{item.quantity}</span>
+                <span className="ml-auto text-gray-900">₹{item.price}</span>
+              </div>)}
             <div className="flex flex-col space-y-5 mt-9">
               <h1 className="text-gray-700 text-2xl title-font font-medium">
-                SubTotal: ₹1600.00
+                SubTotal: ₹{order.amount}
               </h1>
               <div>
                 <button className="text-white bg-pink-500 border-0 py-2 px-6 focus:outline-none hover:bg-pink-600 rounded">
@@ -61,7 +81,7 @@ export default function Order({ params }) {
           <div className="lg:w-1/2 w-full  lg:h-auto h-64 object-cover object-center rounded">
             <Image src={Hero} alt="coding wears" width={800} height={800} />
           </div>
-        </div>
+        </div> : <div className='text-red-700 text-center'>Sorry! Your order is not placed </div>}
       </div>
     </div>
   );

@@ -16,10 +16,9 @@ export const metadata = {
 };
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning={true}>
       <body className={inter.className}>
         <Providers>
-          <>
            <LodingBar/>
             <Navbar />
             <ToastContainer
@@ -36,7 +35,6 @@ export default function RootLayout({ children }) {
             />
             {children}
             <Footer />
-          </>
         </Providers>
       </body>
     </html>
