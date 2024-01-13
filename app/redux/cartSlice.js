@@ -6,6 +6,7 @@ const initialState = {
         ? JSON.parse(localStorage.getItem("cart"))
         : []
       : [],
+  isServiceable: null,
 };
 
 export const cartSlice = createSlice({
@@ -59,6 +60,9 @@ export const cartSlice = createSlice({
       state.cart = [];
       localStorage.removeItem("cart");
     },
+    setIsServiceable: (state, action) => {
+      state.isServiceable = action.payload;
+    },
   },
 });
 
@@ -69,6 +73,7 @@ export const {
   incrementByOne,
   decrementByOne,
   buyNow,
+  setIsServiceable,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

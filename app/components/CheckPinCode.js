@@ -1,18 +1,20 @@
 "use client";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { pincodes } from "@/lib/pincodes/pincodes";
+import {setIsServiceable} from "@/app/redux/cartSlice";
+import { useDispatch, useSelector } from "react-redux";
 export default function CheckPinCode() {
-    const [isServiceable, setIsServiceable] = useState(null);
+    const isServiceable = useSelector((data) => data.cartData.isServiceable)
+    const dispatch = useDispatch();
     const [pincode, setPincode] = useState('');
-
     const checkServiceability = () => {
-        const pincodes = [110053, 90282, 891102, 10052, 56780];
         const parsedPincode = parseInt(pincode);
         if (pincodes.includes(parsedPincode)) {
-            setIsServiceable(true);
+            dispatch(setIsServiceable(true));
             toast.success('Congratulations! Your pin code is serviceable');
         } else {
-            setIsServiceable(false);
+            dispatch(setIsServiceable(false));
             toast.error('Sorry! Your pin code is not serviceable');
         }
     }

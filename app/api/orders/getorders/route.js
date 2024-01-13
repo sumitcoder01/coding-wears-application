@@ -16,12 +16,13 @@ export async function GET(req) {
         if (!userData) {
             return NextResponse.json({ success: false, error: "Invalid authentication token" }, { status: 401 });
         }
-        const orders = await Order.find({userId:user.id})
+        const orders = await Order.find({userId:user.id}).sort({ createdAt: 'desc'});
         if(!orders){
             return NextResponse.json({ success: false, error: "Orders not found" }, { status: 404 });
         }
         return NextResponse.json({ success: true, orders, message: "Orders successfully fetched!" }, { status: 200 });
     } catch (error) {
+        console.log(error);
         return NextResponse.json({ success: false, error: "Internal Server error" }, { status: 500 });
     }
 }

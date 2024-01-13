@@ -22,30 +22,25 @@ export default function Signup() {
   }, [router])
   const handleOnSubmit = async (e) => {
     e.preventDefault();
-    const { name, email, password, confirmPassoword } = formData;
-    if (confirmPassoword !== password) {
-      toast.error("Incorrect confirm passoword");
-    }
-    else {
-      try {
-        const res = await fetch(`${BASE_URL}/users/signup`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ name, email, password })
-        });
-        const response = await res.json();
-        if (response.success) {
-          toast.success(response.message);
-          router.push('/login');
-        }
-        else {
-          toast.error(response.error);
-        }
-      } catch (error) {
-        toast.error("Server Error!");
+    const { name, email, password } = formData;
+    try {
+      const res = await fetch(`${BASE_URL}/users/signup`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, email, password })
+      });
+      const response = await res.json();
+      if (response.success) {
+        toast.success(response.message);
+        router.push('/login');
       }
+      else {
+        toast.error(response.error);
+      }
+    } catch (error) {
+      toast.error("Server Error!");
     }
     setFormData({
       name: '',
@@ -155,6 +150,7 @@ export default function Signup() {
           <div>
             <button
               type="submit"
+              disabled={formData.password !== formData.confirmPassoword}
               className="flex w-full items-center justify-center rounded-md bg-pink-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-pink-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-600"
             >
               <FaUserLock className="mr-2" /> Sign up
@@ -170,6 +166,9 @@ export default function Signup() {
             </span>
           </Link>
         </p>
+        {formData.password !== formData.confirmPassoword &&
+          <div className="text-center text-red-700">Password not matched</div>
+        }
       </div>
     </div>
   );

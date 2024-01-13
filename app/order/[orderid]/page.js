@@ -4,9 +4,12 @@ import Hero from "../../../public/image/hero.jpg";
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { BASE_URL } from "@/confiq/apiurl";
 
 export default function Order({ params }) {
   const [order, setOrder] = useState(null);
+  const [client,setClient]=useState(false);
+  const [text,setText]=useState('Wait! Your order in progress')
   const router = useRouter();
   const getOrder = async (orderId) => {
     try {
@@ -24,6 +27,7 @@ export default function Order({ params }) {
       }
       else {
         toast.error(response.error);
+        setText('Sorry! Your order is not placed ')
       }
     } catch (error) {
       toast.error("Server Error!");
@@ -34,11 +38,12 @@ export default function Order({ params }) {
     if (!localStorage.getItem('auth-token')) {
       router.push('/');
     }
+    setClient(true);
     getOrder(params.orderid);
   }, [router, params.orderid])
   return (
     <div className="text-gray-600">
-      <div className="container px-5 py-24 mx-auto">
+     {client && <div className="container px-5 py-24 mx-auto">
         {order ? <div className="lg:w-4/5 mx-auto flex flex-wrap">
           <div className="lg:w-1/2 w-full lg:pr-10 lg:py-6 mb-6 lg:mb-0">
             <h2 className="text-sm title-font text-gray-500 tracking-widest">
@@ -61,9 +66,9 @@ export default function Order({ params }) {
                 Item Total
               </span>
             </div>
-            {order.prdoucts && order.products.map(item =>
+            {order.products && order.products.map(item =>
               <div key={item.productId} className="flex border-t border-gray-200 py-2">
-                <span className="text-gray-500">{item.name}</span>
+                <span className="text-gray-500 text-sm">{`${item.name} ${item.size}/${item.color}`}</span>
                 <span className="ml-auto text-gray-900">{item.quantity}</span>
                 <span className="ml-auto text-gray-900">₹{item.price}</span>
               </div>)}
@@ -81,8 +86,8 @@ export default function Order({ params }) {
           <div className="lg:w-1/2 w-full  lg:h-auto h-64 object-cover object-center rounded">
             <Image src={Hero} alt="coding wears" width={800} height={800} />
           </div>
-        </div> : <div className='text-red-700 text-center'>Sorry! Your order is not placed </div>}
-      </div>
+        </div> : <div className='text-red-700 text-center'>{text}</div>}
+      </div>}
     </div>
   );
 }

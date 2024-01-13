@@ -4,11 +4,12 @@ import CheckPinCode from "@/app/components/CheckPinCode";
 import { useEffect, useState } from "react";
 import { BASE_URL } from "@/confiq/apiurl";
 import { useRouter } from "next/navigation";
-import { useDispatch } from "react-redux";
-import { addToCart, buyNow } from "@/app/redux/cartSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart, buyNow,setIsServiceable} from "@/app/redux/cartSlice";
 import { toast } from "react-toastify";
 export default function Product({ params }) {
   const dispatch = useDispatch();
+  const isServiceable = useSelector((data) => data.cartData.isServiceable)
   const router = useRouter();
   const [product, setProduct] = useState({});
   const [sizeColorVarient, setSizeColorVarient] = useState({});
@@ -77,6 +78,7 @@ export default function Product({ params }) {
 
   useEffect(() => {
     geData();
+    dispatch(setIsServiceable(null))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
@@ -207,13 +209,15 @@ export default function Product({ params }) {
               </span>
               <button
                 onClick={handleOnAddToCart}
-                className="flex ml-auto text-white bg-pink-500 border-0 py-2 px-6 focus:outline-none hover:bg-pink-600 rounded"
+                disabled={!isServiceable}
+                className="flex ml-auto text-white bg-pink-500 disabled:bg-pink-400 border-0 py-2 px-6 focus:outline-none hover:bg-pink-600 rounded"
               >
                 Add to Cart
               </button>
               <button
                 onClick={handleOnCheckOut}
-                className="flex ml-auto text-white bg-pink-500 border-0 py-2 px-6 focus:outline-none hover:bg-pink-600 rounded"
+                disabled={!isServiceable}
+                className="flex ml-auto text-white bg-pink-500 disabled:bg-pink-400 border-0 py-2 px-6 focus:outline-none hover:bg-pink-600 rounded"
               >
                 Order Now
               </button>

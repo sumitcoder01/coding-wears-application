@@ -19,7 +19,7 @@ export async function POST(req) {
         }
         let products = [];
         for (let item of cart) {
-            products.push({ productId: item.id, qunatity: item.qunatity,name:item.name,price:item.price})
+            products.push({ productId: item.id, quantity: item.quantity, name: item.name, price: item.price, color: item.color, size: item.size })
         }
         deliveryDetails.pincode = parseInt(deliveryDetails.pincode);
         const { _id } = await Order.create({
