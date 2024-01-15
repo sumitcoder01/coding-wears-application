@@ -35,7 +35,7 @@ export default function MyAccount() {
       }
       else {
         toast.error(response.error);
-        router.push('')
+        router.push('/')
       }
     } catch (error) {
       console.log("Server Error!");

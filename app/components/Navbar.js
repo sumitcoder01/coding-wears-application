@@ -36,7 +36,7 @@ export default function Navbar() {
                 Home
               </div>
             </Link>
-            <Link className={`link ${pathname === '/products/TShirt' ? 'text-gray-900' : ''}`} href="/products/TShirt">
+            <Link className={`link ${pathname === '/products/Tshirt' ? 'text-gray-900' : ''}`} href="/products/Tshirt">
               <div className="mr-4 font-bold text-sm hover:text-gray-900">
                 TShirts
               </div>
