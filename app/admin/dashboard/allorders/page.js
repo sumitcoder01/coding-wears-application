@@ -1,5 +1,7 @@
 "use client";
 import Breadcrumb from "@/app/components/Breadcrumb";
+import Modal from "@/app/components/Modal";
+import UpdateOrder from "@/app/components/UpdateOrder";
 import { BASE_URL } from "@/confiq/apiurl";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -7,6 +9,19 @@ import { useEffect, useState } from "react";
 export default function AllOrders() {
   const router = useRouter();
   const [orders, setOrders] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selected, setSelected] = useState({});
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+  const handleOnUpdate = (order) => {
+    setSelected(order);
+    openModal();
+  }
   const getOrders = async () => {
     try {
       const res = await fetch(`${BASE_URL}/orders/getorders`, {
@@ -29,7 +44,7 @@ export default function AllOrders() {
       router.push('/');
     }
     getOrders();
-  }, [router])
+  })
 
   const breadcrumbLinks = [
     { href: '/admin/dashboard', text: 'Dashboard' },
@@ -64,8 +79,8 @@ export default function AllOrders() {
                   <td className="py-2 px-4 text-center border-b">{order.city}</td>
                   <td className={`py-2 text-center ${order.status === 'Pending' ? 'text-yellow-500' : 'text-green-500'} px-4 border-b`}>{order.status}</td>
                   <td className="py-2 text-center px-4 border-b">
-                    <button className="text-blue-500 mr-2">View</button>
-                    <button className="ml-2 text-green-500 me-2">Modify</button>
+                    <button onClick={() => router.push(`/admin/dashboard/order/${order._id}`)} className="text-blue-500 mr-2">View</button>
+                    <button onClick={() => handleOnUpdate(order)} className="ml-2 text-green-500 me-2">Modify</button>
                   </td>
                 </tr>
               ))}
@@ -73,6 +88,9 @@ export default function AllOrders() {
           </table>
         </div>
       </div>
+      <Modal isOpen={isModalOpen} closeModal={closeModal}>
+        <UpdateOrder selected={selected} setSelected={setSelected} closeModal={closeModal} />
+      </Modal>
     </div>
   )
 }

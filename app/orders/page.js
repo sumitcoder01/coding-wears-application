@@ -52,16 +52,16 @@ export default function Orders() {
               <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                   <tr>
-                    <th scope="col" className="px-6 py-3">
+                    <th scope="col" className="px-6 py-3 text-center">
                       Product name
                     </th>
-                    <th scope="col" className="px-6 py-3">
+                    <th scope="col" className="px-6 py-3 text-center">
                       Quantity
                     </th>
-                    <th scope="col" className="px-6 py-3">
+                    <th scope="col" className="px-6 py-3 text-center">
                       Varient
                     </th>
-                    <th scope="col" className="px-6 py-3">
+                    <th scope="col" className="px-6 py-3 text-center">
                       Price
                     </th>
                   </tr>
@@ -69,16 +69,16 @@ export default function Orders() {
                 <tbody>
                   {order.products && order.products.map((item, index) =>
                     <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                      <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                      <th scope="row" className="px-6 py-4 text-center font-medium text-gray-900 whitespace-nowrap dark:text-white">
                         {item.name}
                       </th>
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 text-center">
                         {item.quantity}
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 text-center">
                         {`${item.size},${item.color}`}
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 text-center">
                         ₹{item.price}
                       </td>
                     </tr>)}

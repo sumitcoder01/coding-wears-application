@@ -3,9 +3,50 @@ import Breadcrumb from "@/app/components/Breadcrumb";
 import { BASE_URL } from "@/confiq/apiurl";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import Modal from "@/app/components/Modal";
+import UpdateCategory from "@/app/components/UpdateCategory";
+import { toast } from "react-toastify";
+
 export default function AllCategories() {
-  const [categories,setCategories]=useState([]);
+  const [categories, setCategories] = useState([]);
   const router = useRouter();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selected, setSelected] = useState({});
+  const handleOnUpdate = (category) => {
+    setSelected(category);
+    openModal();
+
+  }
+  const handleOnDelete = async (id) => {
+    let updatedcategories = categories.filter((item => item._id !== id));
+    setCategories(updatedcategories);
+    try {
+      const res = await fetch(`${BASE_URL}/products/deletecategory/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "auth-token": localStorage.getItem('auth-token'),
+        },
+      });
+      const response = await res.json();
+      if (response.success) {
+        toast.success(response.message);
+      }
+      else {
+        toast.error(response.error);
+      }
+    } catch (error) {
+      toast.error("Server Error!");
+    }
+  }
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
   const getCategories = async () => {
     try {
       const res = await fetch(`${BASE_URL}/products/getcategory`, {
@@ -18,7 +59,7 @@ export default function AllCategories() {
       if (response.success) {
         setCategories(response.categories);
       }
-      else{
+      else {
         router.push('/');
       }
     } catch (error) {
@@ -31,8 +72,7 @@ export default function AllCategories() {
       router.push('/');
     }
     getCategories();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router])
+  })
 
   const breadcrumbLinks = [
     { href: '/admin/dashboard', text: 'Dashboard' },
@@ -49,12 +89,12 @@ export default function AllCategories() {
             <div className="text-center space-y-4">
               <p className="text-xl font-semibold mb-2">{categoryItem.category}</p>
               <div className="flex space-x-4">
-                <button
+                <button onClick={() => handleOnDelete(categoryItem._id)}
                   className="bg-red-700 text-white px-4 py-2 rounded transition duration-300 hover:bg-red-600 focus:outline-none focus:border-red-800 focus:ring focus:ring-red-400"
                 >
                   Delete
                 </button>
-                <button
+                <button onClick={() => handleOnUpdate(categoryItem)}
                   className="bg-green-700 text-white px-4 py-2 rounded transition duration-300 hover:bg-green-600 focus:outline-none focus:border-green-800 focus:ring focus:ring-green-400"
                 >
                   Update
@@ -64,6 +104,9 @@ export default function AllCategories() {
           </div>
         ))}
       </div>
+      <Modal isOpen={isModalOpen} closeModal={closeModal}>
+        <UpdateCategory selected={selected} setSelected={setSelected} closeModal={closeModal} />
+      </Modal>
     </div>
   )
 }

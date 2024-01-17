@@ -4,10 +4,52 @@ import Image from "next/image";
 import { BASE_URL } from "@/confiq/apiurl";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import Modal from "@/app/components/Modal";
+import UpdateItem from "@/app/components/UpdateItem";
+import { toast } from "react-toastify";
 
 export default function AllItems() {
   const [products, setProducts] = useState([]);
   const router = useRouter();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selected, setSelected] = useState({});
+
+  const handleOnUpdate = (item) => {
+    setSelected(item);
+    openModal();
+  }
+
+  const handleOnDelete = async (id) => {
+    let updatedproducts = products.filter((item => item._id !== id));
+    setProducts(updatedproducts);
+    try {
+      const res = await fetch(`${BASE_URL}/products/deleteproduct/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "auth-token": localStorage.getItem('auth-token'),
+        },
+      });
+      const response = await res.json();
+      if (response.success) {
+        toast.success(response.message);
+      }
+      else {
+        toast.error(response.error);
+      }
+    } catch (error) {
+      toast.error("Server Error!");
+    }
+  }
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   const getProducts = async () => {
     try {
       const res = await fetch(`${BASE_URL}/products/getallproducts`, {
@@ -20,7 +62,7 @@ export default function AllItems() {
       if (response.success) {
         setProducts(response.products);
       }
-      else{
+      else {
         router.push('/');
       }
     } catch (error) {
@@ -33,8 +75,7 @@ export default function AllItems() {
       router.push('/');
     }
     getProducts();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router])
+  })
   const breadcrumbLinks = [
     { href: '/admin/dashboard', text: 'Dashboard' },
     { href: '/admin/dashboard/allitems', text: 'AllItems' },
@@ -82,12 +123,12 @@ export default function AllItems() {
                 </p>
               </div>
               <div className="flex space-x-4">
-                <button
+                <button onClick={() => handleOnDelete(product._id)}
                   className="bg-red-700 text-white px-4 py-2 rounded transition duration-300 hover:bg-red-600 focus:outline-none focus:border-red-800 focus:ring focus:ring-red-400"
                 >
                   Delete
                 </button>
-                <button
+                <button onClick={() => handleOnUpdate(product)}
                   className="bg-green-700 text-white px-4 py-2 rounded transition duration-300 hover:bg-green-600 focus:outline-none focus:border-green-800 focus:ring focus:ring-green-400"
                 >
                   Update
@@ -97,6 +138,9 @@ export default function AllItems() {
           </div>
         ))}
       </div>
+      <Modal isOpen={isModalOpen} closeModal={closeModal}>
+        <UpdateItem selected={selected} setSelected={setSelected} closeModal={closeModal} />
+      </Modal>
     </div>
   )
 }

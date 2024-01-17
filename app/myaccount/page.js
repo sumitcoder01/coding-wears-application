@@ -4,7 +4,10 @@ import Link from 'next/link';
 import { BASE_URL } from "@/confiq/apiurl";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { FaUserEdit } from "react-icons/fa";
 import { useEffect, useState } from "react";
+import UpdateUser from "../components/UpdateUser";
+import Modal from "../components/Modal";
 
 export default function MyAccount() {
   const router = useRouter();
@@ -14,6 +17,15 @@ export default function MyAccount() {
     createdAt: '',
     updatedAt: ''
   })
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
   const getUser = async () => {
     try {
       const res = await fetch(`${BASE_URL}/users/getuser`, {
@@ -54,8 +66,8 @@ export default function MyAccount() {
       router.push('/');
     }
     getUser();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[router])
   return (
     <div className="container mx-auto mt-8">
       <div className="max-w-lg mx-auto bg-white p-8 rounded-md shadow-lg">
@@ -96,9 +108,13 @@ export default function MyAccount() {
                 Forgot Password?
               </Link>
             </div>
+            <p onClick={openModal} className='font-medium mt-3 text-pink-600'><FaUserEdit /></p>
           </div>
         </div>
       </div>
+      <Modal isOpen={isModalOpen} closeModal={closeModal}>
+            <UpdateUser user={user} setUser={setUser} closeModal={closeModal}/>
+      </Modal>
     </div>
   )
 }
