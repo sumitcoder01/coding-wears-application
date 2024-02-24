@@ -6,20 +6,6 @@ import { ToastContainer } from "react-toastify";
 import LodingBar from "./components/LodingBar";
 import "react-toastify/dist/ReactToastify.css";
 
-export async function getClients(){
-  const token = await getUserToken()
-
-  if (!token) throw Error("Missing token for request")
-
-  return await api
-    .headers({
-      accept: "application/json",
-      token,
-    })
-    .get("/clients")
-    .json()
-}
-
 import { Providers } from "./redux/providers";
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,8 +14,7 @@ export const metadata = {
   description:
     "coding wears is e commerce which provides hoodies,Tshirt,stickers and mugs with coding slogans images which motivate you to become a good coder",
 };
-export default async function RootLayout({ children }) {
-  const clients = await getClients()
+export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
