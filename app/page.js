@@ -1,18 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import Hero from '../public/image/hero.jpg';
-import { cookies } from 'next/headers';
 
-async function getCookieData() {
-  return new Promise((resolve) =>
-    setTimeout(() => {
-      // cookies will be called outside of the async context, causing a build-time error
-      resolve(cookies().getAll())
-    }, 1000)
-  )
-}
-export default async function Home() {
-  const cookieData = await getCookieData();
+export default function Home() {
   return (
     <div className="text-gray-600 body-font">
       <div className="container mx-auto flex px-5 py-24 md:flex-row flex-col items-center">
