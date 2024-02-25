@@ -4,6 +4,9 @@ import { BASE_URL } from "@/confiq/apiurl";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+
+export const dynamic = 'force-dynamic';
+
 export default function Dashboard() {
   const [userName, setUserName] = useState('admin');
   const router = useRouter();

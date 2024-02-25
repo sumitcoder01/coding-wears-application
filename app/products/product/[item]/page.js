@@ -7,6 +7,9 @@ import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, buyNow,setIsServiceable} from "@/app/redux/cartSlice";
 import { toast } from "react-toastify";
+
+export const dynamic = 'force-dynamic';
+
 export default function Product({ params }) {
   const dispatch = useDispatch();
   const isServiceable = useSelector((data) => data.cartData.isServiceable)
@@ -16,16 +19,7 @@ export default function Product({ params }) {
 
   const geData = async () => {
     try {
-      const res = await fetch(
-        `${BASE_URL}/products/getproduct/${params.item}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
+      const res = await fetch(`${BASE_URL}/products/getproduct/${params.item}`);
       const response = await res.json();
       if (response.success) {
         setProduct(response.varient);

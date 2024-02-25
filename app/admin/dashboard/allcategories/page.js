@@ -7,6 +7,8 @@ import Modal from "@/app/components/Modal";
 import UpdateCategory from "@/app/components/UpdateCategory";
 import { toast } from "react-toastify";
 
+export const dynamic = 'force-dynamic';
+
 export default function AllCategories() {
   const [categories, setCategories] = useState([]);
   const router = useRouter();

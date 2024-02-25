@@ -5,6 +5,8 @@ import { NextResponse } from "next/server";
 const jwt = require('jsonwebtoken');
 const JWT_SECRET = process.env.JWT_SECRET;
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(req, { params }) {
     try {
         const authToken = req.headers.get('auth-token');

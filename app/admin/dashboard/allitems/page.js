@@ -8,6 +8,8 @@ import Modal from "@/app/components/Modal";
 import UpdateItem from "@/app/components/UpdateItem";
 import { toast } from "react-toastify";
 
+export const dynamic = 'force-dynamic';
+
 export default function AllItems() {
   const [products, setProducts] = useState([]);
   const router = useRouter();

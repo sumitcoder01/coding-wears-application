@@ -20,9 +20,6 @@ export default function Forgot() {
     try {
       const res = await fetch(`${BASE_URL}/users/forgot`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify({ email })
       });
       const response = await res.json();

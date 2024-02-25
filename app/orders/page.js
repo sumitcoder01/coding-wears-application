@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+export const dynamic = 'force-dynamic';
+
 export default function Orders() {
   const router =useRouter();
   const [orders, setOrders] = useState([]);

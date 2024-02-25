@@ -3,6 +3,9 @@ import Breadcrumb from "@/app/components/Breadcrumb";
 import { useState } from "react";
 import { toast } from 'react-toastify';
 import { BASE_URL } from "@/confiq/apiurl";
+
+export const dynamic = 'force-dynamic';
+
 export default function AddCategory() {
   const breadcrumbLinks = [
     { href: '/admin/dashboard', text: 'Dashboard' },

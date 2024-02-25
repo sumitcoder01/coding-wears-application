@@ -9,6 +9,8 @@ import { useEffect, useState } from "react";
 import UpdateUser from "../components/UpdateUser";
 import Modal from "../components/Modal";
 
+export const dynamic = 'force-dynamic';
+
 export default function MyAccount() {
   const router = useRouter();
   const [user, setUser] = useState({

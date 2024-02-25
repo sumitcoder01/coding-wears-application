@@ -5,6 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from 'react-toastify';
 import { BASE_URL } from "@/confiq/apiurl";
 import {clearCart} from "../redux/cartSlice";
+
+export const dynamic = 'force-dynamic';
+
 export default function Checkout() {
   const cart = useSelector((data) => data.cartData.cart);
   const dispatch = useDispatch();

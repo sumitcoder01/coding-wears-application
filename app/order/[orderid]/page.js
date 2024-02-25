@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { BASE_URL } from "@/confiq/apiurl";
 
+export const dynamic = 'force-dynamic';
+
 export default function Order({ params }) {
   const [order, setOrder] = useState(null);
   const [client,setClient]=useState(false);

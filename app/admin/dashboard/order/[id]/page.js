@@ -4,6 +4,8 @@ import { BASE_URL } from "@/confiq/apiurl";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+export const dynamic = 'force-dynamic';
+
 export default function Order({ params }) {
 
   const breadcrumbLinks = [

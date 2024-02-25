@@ -1,15 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { BASE_URL } from "@/confiq/apiurl";
+
+export const dynamic = 'force-dynamic';
+
 const getProducts = async (category) => {
   let products = {};
   try {
-    const res = await fetch(`${BASE_URL}/products/getproducts/${category}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const res = await fetch(`${BASE_URL}/products/getproducts/${category}`);
     const response = await res.json();
     if (response.success) {
       products = response.products;
