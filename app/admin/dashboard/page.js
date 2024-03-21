@@ -33,6 +33,7 @@ export default function Dashboard() {
       }
       else {
         toast.error(response.error);
+        localStorage.removeItem('auth-token');
         router.push('/');
       }
     } catch (error) {

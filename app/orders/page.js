@@ -24,6 +24,10 @@ export default function Orders() {
         setOrders(response.orders);
         setText(`${response.orders.length===0 ? "your orders yet":""}`);
       }
+      else{
+        localStorage.removeItem('auth-token');
+        throw new Error('error in token');
+      }
     } catch (error) {
       setText('No Orders yet!');
       console.log("server error")
