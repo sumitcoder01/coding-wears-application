@@ -49,7 +49,6 @@ export default function MyAccount() {
       }
       else {
         toast.error(response.error);
-        localStorage.removeItem('auth-token');
         router.push('/')
       }
     } catch (error) {

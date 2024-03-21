@@ -21,7 +21,7 @@ export async function POST(req) {
             id: user._id
           }
         }
-        const authToken = jwt.sign(data, JWT_SECRET,{ expiresIn: '2d' });
+        const authToken = jwt.sign(data, JWT_SECRET);
         return NextResponse.json({ success: true, authToken, message: "User Successfully login" }, { status: 200 });
     } catch (error) {
         return NextResponse.json({ success: false, error: "Internal Server error" }, { status: 500 });
