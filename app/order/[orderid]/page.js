@@ -5,15 +5,17 @@ import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { BASE_URL } from "@/confiq/apiurl";
+import OrderSkeleton from "@/app/components/skeletons/OrderSkeleton";
 
 export const dynamic = 'force-dynamic';
 
 export default function Order({ params }) {
   const [order, setOrder] = useState(null);
-  const [client,setClient]=useState(false);
-  const [text,setText]=useState('Wait! Your order in progress')
+  const [loading, setLoading] = useState(true);
+  const [text, setText] = useState('Wait! Your order in progress')
   const router = useRouter();
   const getOrder = async (orderId) => {
+    setLoading(true);
     try {
       const res = await fetch(`${BASE_URL}/orders/getorders/${orderId}`, {
         method: "GET",
@@ -33,19 +35,18 @@ export default function Order({ params }) {
       }
     } catch (error) {
       toast.error("Server Error!");
-
     }
+    setLoading(false);
   };
   useEffect(() => {
     if (!localStorage.getItem('auth-token')) {
       router.push('/');
     }
-    setClient(true);
     getOrder(params.orderid);
   }, [router, params.orderid])
   return (
     <div className="text-gray-600">
-     {client && <div className="container px-5 py-24 mx-auto">
+      {loading ? <OrderSkeleton /> : <div className="container px-5 py-24 mx-auto">
         {order ? <div className="lg:w-4/5 mx-auto flex flex-wrap">
           <div className="lg:w-1/2 w-full lg:pr-10 lg:py-6 mb-6 lg:mb-0">
             <h2 className="text-sm title-font text-gray-500 tracking-widest">

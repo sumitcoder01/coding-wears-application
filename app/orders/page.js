@@ -3,14 +3,17 @@ import { BASE_URL } from "@/confiq/apiurl";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import OrdersSkeleton from "../components/skeletons/OrdersSkeleton";
 
 export const dynamic = 'force-dynamic';
 
 export default function Orders() {
-  const router =useRouter();
+  const router = useRouter();
   const [orders, setOrders] = useState([]);
-  const [text,setText]=useState('Wait! Your orders are fetching')
+  const [loading, setLoading] = useState(true);
+  const [text, setText] = useState('Wait! Your orders are fetching')
   const getOrders = async () => {
+    setLoading(true);
     try {
       const res = await fetch(`${BASE_URL}/orders/getorders`, {
         method: "GET",
@@ -22,18 +25,19 @@ export default function Orders() {
       const response = await res.json();
       if (response.success) {
         setOrders(response.orders);
-        setText(`${response.orders.length===0 ? "your orders yet":""}`);
+        setText(`${response.orders.length === 0 ? "No orders yet" : ""}`);
       }
-      else{
+      else {
         throw new Error('error in token');
       }
     } catch (error) {
       setText('No Orders yet!');
       console.log("server error")
     }
+    setLoading(false);
   }
   useEffect(() => {
-    if(!localStorage.getItem('auth-token')){
+    if (!localStorage.getItem('auth-token')) {
       router.push('/');
     }
     getOrders();
@@ -48,7 +52,8 @@ export default function Orders() {
   }
   return (
     <div>
-      {orders && orders.length !== 0 ? <div className='container mx-auto my-3'>
+
+      {loading ? <OrdersSkeleton /> : orders && orders.length !== 0 ? <div className='container mx-auto my-3'>
         <h1 className='text-3xl text-center font-bold'>My Orders</h1>
         {orders.map((order, index) =>
           <Link key={index} href={`/order/${order._id}`}>
