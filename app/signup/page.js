@@ -7,7 +7,9 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BASE_URL } from "@/confiq/apiurl";
 import { toast } from "react-toastify";
+import { HypnosisLoader } from "../components/icons/HypnosisLoader";
 export default function Signup() {
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const [formData, setFormData] = useState({
     name: '',
@@ -22,6 +24,8 @@ export default function Signup() {
   }, [router])
   const handleOnSubmit = async (e) => {
     e.preventDefault();
+    if (loading) return;
+    setLoading(true);
     const { name, email, password } = formData;
     try {
       const res = await fetch(`${BASE_URL}/users/signup`, {
@@ -45,6 +49,7 @@ export default function Signup() {
       password: '',
       confirmPassoword: ''
     })
+    setLoading(false);
   }
   const handleOnChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -150,7 +155,7 @@ export default function Signup() {
               disabled={formData.password !== formData.confirmPassoword}
               className="flex w-full items-center justify-center rounded-md bg-pink-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-pink-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-600"
             >
-              <FaUserLock className="mr-2" /> Sign up
+              {!loading ? <span className="flex items-center"><FaUserLock className="mr-2" /> <span>Sign up</span></span> : <HypnosisLoader />}
             </button>
           </div>
         </form>

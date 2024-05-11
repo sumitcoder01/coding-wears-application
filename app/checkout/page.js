@@ -4,11 +4,13 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from 'react-toastify';
 import { BASE_URL } from "@/confiq/apiurl";
-import {clearCart} from "../redux/cartSlice";
+import { clearCart } from "../redux/cartSlice";
+import { HypnosisLoader } from '../components/icons/HypnosisLoader';
 
 export const dynamic = 'force-dynamic';
 
 export default function Checkout() {
+  const [loading, setLoading] = useState(false);
   const cart = useSelector((data) => data.cartData.cart);
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
@@ -20,7 +22,7 @@ export default function Checkout() {
     state: '',
     pincode: '',
   });
- 
+
   const router = useRouter();
   const calculateTotal = () => {
     return cart.reduce((total, item) => total + item.price * item.quantity, 0);
@@ -32,10 +34,13 @@ export default function Checkout() {
     });
   };
 
-  const handleSubmit = async() => {
-    for(let key in formData){
-      if(formData[key].length < 3){
+  const handleSubmit = async () => {
+    if (loading) return;
+    setLoading(true);
+    for (let key in formData) {
+      if (formData[key].length < 3) {
         toast.error("Please enter correct details!");
+        setLoading(false);
         return;
       }
     }
@@ -45,9 +50,9 @@ export default function Checkout() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "auth-token":localStorage.getItem('auth-token'),
+          "auth-token": localStorage.getItem('auth-token'),
         },
-        body: JSON.stringify({deliveryDetails:formData,cart:cart,totatPrice})
+        body: JSON.stringify({ deliveryDetails: formData, cart: cart, totatPrice })
       });
       const response = await res.json();
       if (response.success) {
@@ -70,6 +75,7 @@ export default function Checkout() {
       state: '',
       pincode: '',
     })
+    setLoading(false);
   };
   useEffect(() => {
     if (!localStorage.getItem('auth-token')) {
@@ -207,7 +213,7 @@ export default function Checkout() {
               {cart && cart.map((item, index) => (
                 <div key={index} className="mb-4 flex justify-between flex-wrap items-center">
                   <p className="text-gray-700 mb-1 mr-1">
-                  {`${index + 1}. ${item.name} (${item.size}/${item.color})`}
+                    {`${index + 1}. ${item.name} (${item.size}/${item.color})`}
                   </p>
                   <p className="font-medium mb-1 mr-1">{item.quantity} items</p>
                   <p className="font-medium mb-1 mr-1">₹{item.price && item.price.toFixed(2)}</p>
@@ -221,7 +227,7 @@ export default function Checkout() {
               <div className="flex justify-start mt-4">
                 <span>
                   <button disabled={!cart || cart.length === 0} onClick={handleSubmit} className="bg-pink-500 text-white py-2 px-4 rounded hover:bg-pink-600 transition duration-300 ease-in-out">
-                    Order Now
+                    {loading ? <HypnosisLoader /> : "Order Now"}
                   </button>
                 </span>
               </div>

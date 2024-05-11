@@ -2,11 +2,16 @@
 import { BASE_URL } from "@/confiq/apiurl";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { HypnosisLoader } from "./icons/HypnosisLoader";
+import { useState } from "react";
 
 export default function UpdateUser({ user, setUser, closeModal }) {
-    const router =useRouter();
+    const router = useRouter();
+    const [loading, setLoading] = useState(false);
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (loading) return;
+        setLoading(true);
         try {
             const res = await fetch(`${BASE_URL}/users/updateuser`, {
                 method: "PUT",
@@ -19,7 +24,7 @@ export default function UpdateUser({ user, setUser, closeModal }) {
             const response = await res.json();
             if (response.success) {
                 toast.success(response.message);
-                
+
             }
             else {
                 toast.error(response.error);
@@ -27,10 +32,11 @@ export default function UpdateUser({ user, setUser, closeModal }) {
         } catch (error) {
             toast.error("Server Error!");
         }
+        setLoading(false);
         closeModal();
         router.push('/myaccount');
     }
-    const handleChange = (e) =>{
+    const handleChange = (e) => {
         setUser({ ...user, [e.target.name]: e.target.value });
     }
     return (
@@ -70,7 +76,7 @@ export default function UpdateUser({ user, setUser, closeModal }) {
                         type="submit"
                         className="bg-pink-500 text-white px-4 mb-2 py-2 rounded hover:bg-pink-700"
                     >
-                        Update user
+                        {loading ? <HypnosisLoader /> : "Update user"}
                     </button>
                 </div>
             </form>}
