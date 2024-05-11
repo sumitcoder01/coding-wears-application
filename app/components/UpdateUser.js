@@ -2,7 +2,7 @@
 import { BASE_URL } from "@/confiq/apiurl";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import { HypnosisLoader } from "./icons/HypnosisLoader";
+import { HypnosisLoader } from "./loaders/HypnosisLoader";
 import { useState } from "react";
 
 export default function UpdateUser({ user, setUser, closeModal }) {

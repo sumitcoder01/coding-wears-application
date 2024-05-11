@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BASE_URL } from "@/confiq/apiurl";
 import { toast } from "react-toastify";
-import { HypnosisLoader } from "../components/icons/HypnosisLoader";
+import { HypnosisLoader } from "../components/loaders/HypnosisLoader";
 export default function Login() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();

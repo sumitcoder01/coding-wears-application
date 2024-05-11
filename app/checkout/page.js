@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from 'react-toastify';
 import { BASE_URL } from "@/confiq/apiurl";
 import { clearCart } from "../redux/cartSlice";
-import { HypnosisLoader } from '../components/icons/HypnosisLoader';
+import { HypnosisLoader } from '../components/loaders/HypnosisLoader';
 
 export const dynamic = 'force-dynamic';
 
