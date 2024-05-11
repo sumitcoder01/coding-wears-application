@@ -35,7 +35,7 @@ export default async function Products({ params }) {
                 <div className="relative h-60 overflow-hidden rounded-md shadow-md transition-transform transform hover:scale-105 focus:scale-105 focus:outline-none focus:shadow-outline">
                   <Image
                     alt={title}
-                    className="object-cover w-full h-full rounded"
+                    className="object-fill rounded"
                     src={products[title].img}
                     width={420}
                     height={260}

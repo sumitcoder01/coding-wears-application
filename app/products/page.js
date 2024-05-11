@@ -50,10 +50,10 @@ export default async function Shop() {
                 products[title]["category"] === item.category && (
                   <div key={index} className="lg:w-1/4 md:w-1/2 w-full p-4">
                     <Link href={`/products/product/${products[title].slug}`}>
-                      <div className="relative h-60 overflow-hidden rounded-md shadow-md transition-transform transform hover:scale-105 focus:scale-105 focus:outline-none focus:shadow-outline">
+                      <div className="relative h-60 overflow-hidden  rounded-md shadow-md transition-transform transform hover:scale-105 focus:scale-105 focus:outline-none focus:shadow-outline">
                         <Image
                           alt={title}
-                          className="object-cover w-full h-full rounded"
+                          className="object-fill rounded"
                           src={products[title].img}
                           width={420}
                           height={260}
