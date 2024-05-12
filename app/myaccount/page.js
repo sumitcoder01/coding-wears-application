@@ -13,7 +13,7 @@ import { UserIcon } from "../components/icons/UserIcon";
 import { EmailIcon } from "../components/icons/EmailIcon";
 import { DateIcon } from "../components/icons/DateIcon";
 import { PasswordIcon } from "../components/icons/PasswordIcon";
-import ProfileImage from '../../public/image/Profile-image.jpg'
+import ProfileImage from '../../public/image/profile-image.jpg'
 
 export const dynamic = 'force-dynamic';
 
