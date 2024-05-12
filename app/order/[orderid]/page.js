@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import Hero from "../../../public/image/hero.jpg";
+import Hero from "../../../public/image/hero.webp";
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -43,6 +43,7 @@ export default function Order({ params }) {
       router.push('/');
     }
     getOrder(params.orderid);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router, params.orderid])
   return (
     <div className="text-gray-600">
@@ -58,7 +59,7 @@ export default function Order({ params }) {
             <h4 className="text-sm mb-4 text-gray-500">
               Your order has been successfully placed
             </h4>
-            <div className="flex mb-4">
+            <div className="flex mb-4 gap-2">
               <span className="flex-grow border-b-2 border-gray-300 py-2 text-lg px-1">
                 Item Description
               </span>
@@ -70,7 +71,7 @@ export default function Order({ params }) {
               </span>
             </div>
             {order.products && order.products.map(item =>
-              <div key={item.productId} className="flex border-t border-gray-200 py-2">
+              <div key={item.productId} className="flex border-t border-gray-200 py-2 gap-2">
                 <span className="text-gray-500 text-sm">{`${item.name} ${item.size}/${item.color}`}</span>
                 <span className="ml-auto text-gray-900">{item.quantity}</span>
                 <span className="ml-auto text-gray-900">₹{item.price}</span>
@@ -87,7 +88,7 @@ export default function Order({ params }) {
             </div>
           </div>
           <div className="lg:w-1/2 w-full  lg:h-auto h-64 object-cover object-center rounded">
-            <Image src={Hero} alt="coding wears" width={800} height={800} />
+            <Image src={Hero} alt="coding wears" width={400} height={400} />
           </div>
         </div> : <div className='text-red-700 text-center'>{text}</div>}
       </div>}

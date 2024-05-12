@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import Hero from '../public/image/hero.jpg';
+import Hero from '../public/image/hero.webp';
 
 export default function Home() {
   return (
@@ -11,8 +11,8 @@ export default function Home() {
             className="object-cover object-center rounded"
             alt="hero"
             src={Hero}
-            width={720}
-            height={600}
+            width={400}
+            height={400}
           />
         </div>
         <div className="lg:flex-grow md:w-1/2 lg:pl-24 md:pl-16 flex flex-col md:items-start md:text-left items-center text-center">

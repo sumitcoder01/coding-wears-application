@@ -9,6 +9,11 @@ import { useEffect, useState } from "react";
 import UpdateUser from "../components/UpdateUser";
 import Modal from "../components/Modal";
 import UserAccountSkeleton from "../components/skeletons/UserAccountSkeleton";
+import { UserIcon } from "../components/icons/UserIcon";
+import { EmailIcon } from "../components/icons/EmailIcon";
+import { DateIcon } from "../components/icons/DateIcon";
+import { PasswordIcon } from "../components/icons/PasswordIcon";
+import ProfileImage from '../../public/image/Profile-image.jpg'
 
 export const dynamic = 'force-dynamic';
 
@@ -82,7 +87,7 @@ export default function MyAccount() {
               <h2 className="text-2xl font-semibold text-gray-800">My Account</h2>
               <div className="relative w-20 h-20">
                 <Image
-                  src="https://source.unsplash.com/150x150/?portrait"
+                  src={ProfileImage}
                   alt="User Profile"
                   layout="fill"
                   objectFit="cover"
@@ -92,23 +97,23 @@ export default function MyAccount() {
             </div>
             <div>
               <div className="mb-4">
-                <label className="text-sm text-gray-600 block">Name</label>
+                <label className="text-sm text-gray-600 flex items-center gap-1"><UserIcon /><span>Name</span></label>
                 <p className="font-medium text-gray-800">{user.name}</p>
               </div>
               <div className="mb-4">
-                <label className="text-sm text-gray-600 block">Email</label>
+                <label className="text-sm text-gray-600 flex items-center gap-1"><EmailIcon /><span>Email</span></label>
                 <p className="font-medium text-gray-800">{user.email}</p>
               </div>
               <div className="mb-4">
-                <label className="text-sm text-gray-600 block">Created At</label>
+                <label className="text-sm text-gray-600 flex items-center gap-1"><DateIcon /><span>Created At</span></label>
                 <p className="font-medium text-gray-800">{user.createdAt}</p>
               </div>
               <div className="mb-4">
-                <label className="text-sm text-gray-600 block">Updated At</label>
+                <label className="text-sm text-gray-600 flex items-center gap-1"><DateIcon /><span>Updated At</span></label>
                 <p className="font-medium text-gray-800">{user.updatedAt}</p>
               </div>
               <div className="mb-4">
-                <label className="text-sm text-gray-600 block">Password</label>
+                <label className="text-sm text-gray-600 flex gap-1"><PasswordIcon /><span>Password</span></label>
                 <div className="flex items-center">
                   <p className="font-medium text-gray-800">{'**************'}</p>
                   <Link className="ml-2 text-blue-500 hover:underline focus:outline-none" href="/forgot">
