@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import { BASE_URL } from "@/confiq/apiurl";
 import { toast } from "react-toastify";
 import { HypnosisLoader } from "../components/loaders/HypnosisLoader";
+import { EmailIcon } from "../components/icons/EmailIcon";
+
 export default function Forgot() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -54,9 +56,9 @@ export default function Forgot() {
           <div>
             <label
               htmlFor="email"
-              className="block text-sm font-medium leading-6 text-gray-900"
+              className="flex items-center gap-1 text-sm font-medium leading-6 text-gray-900"
             >
-              Email address
+              <EmailIcon /><span>Email address</span>
             </label>
             <div className="mt-2">
               <input
@@ -64,6 +66,7 @@ export default function Forgot() {
                 name="email"
                 type="email"
                 autoComplete="email"
+                placeholder="enter your email..."
                 minLength={5}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}

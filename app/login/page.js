@@ -8,7 +8,11 @@ import { useEffect, useState } from "react";
 import { BASE_URL } from "@/confiq/apiurl";
 import { toast } from "react-toastify";
 import { HypnosisLoader } from "../components/loaders/HypnosisLoader";
+import { TogglePassword } from "../components/TogglePassword";
+import { EmailIcon } from "../components/icons/EmailIcon";
+import { PasswordIcon } from "../components/icons/PasswordIcon";
 export default function Login() {
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -65,9 +69,9 @@ export default function Login() {
           <div>
             <label
               htmlFor="email"
-              className="block text-sm font-medium leading-6 text-gray-900"
+              className="flex items-center gap-1 text-sm font-medium leading-6 text-gray-900"
             >
-              Email address
+              <EmailIcon /><span>Email address</span>
             </label>
             <div className="mt-2">
               <input
@@ -87,9 +91,9 @@ export default function Login() {
             <div className="flex items-center justify-between">
               <label
                 htmlFor="password"
-                className="block text-sm font-medium leading-6 text-gray-900"
+                className="flex items-center gap-1 text-sm font-medium leading-6 text-gray-900"
               >
-                Password
+                <PasswordIcon /> <span>Password</span>
               </label>
               <div className="text-sm">
                 <Link href="/forgot">
@@ -99,17 +103,18 @@ export default function Login() {
                 </Link>
               </div>
             </div>
-            <div className="mt-2">
+            <div className="mt-2 relative">
               <input
                 id="password"
                 name="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="enter your password"
                 minLength={8}
                 value={formData.password}
                 onChange={handleOnChange}
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 px-2 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm sm:leading-6"
               />
+              <TogglePassword showPassword={showPassword} setShowPassword={setShowPassword} />
             </div>
           </div>
 
